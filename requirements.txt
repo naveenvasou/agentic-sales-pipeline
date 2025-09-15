@@ -1,0 +1,8 @@
+langgraph
+langchain
+openai
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+pandas
