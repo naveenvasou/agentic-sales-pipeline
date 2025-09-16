@@ -1,202 +1,28 @@
-from typing import Optional, List, Type, Any
-from pydantic import BaseModel, HttpUrl, Field
-from langchain.tools.base import BaseTool
-import serpapi
-import json
-import requests
-from bs4 import BeautifulSoup
 import os
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
-from langchain.prompts import PromptTemplate
-import google.generativeai as genai
-
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
+from tools import GoogleSearchTool, WebIngestTool, VectorQueryTool
+from langchain.memory import ConversationSummaryBufferMemory
+import logging
 
-serp_api_key = "fd012c64a062d27b1c8a0fbe35833603f570d488e8baeb1c94a7efbb95047d9b"
-os.environ["GOOGLE_API_KEY"] = "AIzaSyCnHlsIB-xBfouiUJHcA8dYYg4XMAdNOw0"
-genai.configure(api_key="AIzaSyCnHlsIB-xBfouiUJHcA8dYYg4XMAdNOw0")
+logging.basicConfig(filename='agent_run.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+global serp_api_key 
 
-class Lead(BaseModel):
+def setup_api_keys():
+    global serp_api_key 
+    serp_api_key = "fd012c64a062d27b1c8a0fbe35833603f570d488e8baeb1c94a7efbb95047d9b"
+    os.environ["GOOGLE_API_KEY"] = "AIzaSyCnHlsIB-xBfouiUJHcA8dYYg4XMAdNOw0"
+    logging.info("API keys set up successfully.")
+
+def create_lead_generation_agent():
     """
-    Standard structured representation of a lead.
+    Creates and returns a configured LangChain agent executor for lead generation.
     """
-    company_name: str                 # Official name of the company
-    domain: Optional[str]             # Company website/domain
-    industry: Optional[str]           # Industry/sector
-    hq_location: Optional[str]        # Headquarters city/country
-    linkedin_url: Optional[HttpUrl]   # LinkedIn profile URL
-    source: str                       # Where this lead was found (e.g., "Google Search", "OpenCorporates")
+    setup_api_keys()
+    logging.info("Starting the Lead Generation Agent creation process.")
 
-class GoogleSearchInput(BaseModel):
-    query: str = Field(..., description="The search query string")
-    max_results: Optional[int] = Field(10, description="Maximum number of results to return")
-
-class GoogleSearchTool(BaseTool):
-    """Tool for searching companies using SerpAPI Google Search."""
-    
-    name: str = "google_search"
-    description: str = (
-        "Use this tool to perform a Google search via SerpAPI. "
-        "Args: "
-        " - query (string): The exact search phrase to look up on Google. "
-        " - max_results (integer, optional, default=10): The maximum number of results to return. "
-        "Outputs: A JSON string containing a list of search results. "
-        "Each result object may include the following keys: "
-        " - 'position' (int): position of the result in the search page"
-        " - 'title' (string): The title of the search result. "
-        " - 'link' (string): The direct URL to the result. "
-        " - 'snippet' (string): A short description or preview text of the result. "
-        "Example Input: {\"query\": \"hotel Goa \\\"poor reviews\\\" OR \\\"guest complaints\\\" site:tripadvisor.com\", \"max_results\": 15} "
-        "Example Output: "
-        "[{\"title\": \"ABC Events\", \"link\": \"https://abcevents.com\", \"snippet\": \"Leading event management company in Bangalore...\"}, ...]"
-    )
-    args_schema: Type[BaseModel] = GoogleSearchInput
-    api_key: str = ""
-    base_url: str = ""
-    
-    def __init__(self, api_key: str):
-        super().__init__()
-        self.api_key = api_key
-        self.base_url = "https://serpapi.com/search"
-    
-    def _run(self, query: str, max_results: int = 10) -> str:
-        """Execute the search and return results."""
-        try:
-            params = {
-                "engine": "google_light",
-                "q": query,
-                "location": "Bangalore, India",
-                "google_domain": "google.com",
-                "hl": "en",
-                "gl": "in",
-                "api_key": self.api_key,
-                "num" : max_results
-            }
-
-            results = serpapi.search(params)
-            if "organic_results" not in results:
-                return json.dumps([])
-            organic_results = results["organic_results"]
-        
-            return json.dumps(organic_results)
-            
-        except Exception as e:
-            return f"Error in SerpAPI search: {str(e)}"
-    async def _arun(self, query: str, max_results: int = 10):
-        """Async version - not implemented for this example."""
-        raise NotImplementedError("GoogleSearchTool does not support async execution yet.")
-    
-
-class WebIngestInput(BaseModel):
-    urls: List[str] = Field(..., description="List of URLs to scrape and index")
-
-class WebIngestTool(BaseTool):
-    name: str = "web_ingest"
-    description: str = (
-        "Scrapes a list of URLs, cleans the text, chunks it, embeds it, "
-        "and stores it into a FAISS vector database for later retrieval. "
-        "Input: {urls: list of website URLs}. "
-        "Output: A message confirming how many chunks were stored."
-    )
-    args_schema: Type[BaseModel] = WebIngestInput
-    embedding_model:  Any = None
-    vectorstore: Any = None
-
-    def __init__(self, embedding_model=None):
-        super().__init__()
-        self.embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        self.vectorstore = None  # will be initialized after ingestion
-
-    def _run(self, urls: List[str]) -> str:
-        try:
-            all_texts = []
-            for url in urls:
-                response = requests.get(url, timeout=10)
-                response.raise_for_status()
-
-                soup = BeautifulSoup(response.text, "html.parser")
-
-                # Remove scripts, styles
-                for script in soup(["script", "style"]):
-                    script.extract()
-
-                text = soup.get_text(separator=" ", strip=True)
-                all_texts.append({"source": url, "content": text})
-
-            # Split text into chunks
-            splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=100,
-                length_function=len
-            )
-
-            documents = []
-            for item in all_texts:
-                chunks = splitter.split_text(item["content"])
-                for chunk in chunks:
-                    documents.append({"page_content": chunk, "metadata": {"source": item["source"]}})
-
-            # Embed and store into FAISS
-            self.vectorstore = FAISS.from_texts(
-                texts=[d["page_content"] for d in documents],
-                embedding=self.embedding_model,
-                metadatas=[d["metadata"] for d in documents],
-            )
-
-            return f"Successfully ingested {len(documents)} chunks from {len(urls)} URLs into vector store."
-
-        except Exception as e:
-            return f"Error during ingestion: {str(e)}"
-
-    async def _arun(self, urls: List[str]) -> str:
-        raise NotImplementedError("Async not supported yet.")
-    
-
-class VectorQueryInput(BaseModel):
-    query: str = Field(..., description="The natural language query to search for in the vector database")
-    top_k: int = Field(5, description="Number of most relevant results to return")
-
-
-class VectorQueryTool(BaseTool):
-    name: str = "vector_query"
-    description: str = (
-        "Query the FAISS vector database created by WebIngestTool. "
-        "Inputs: "
-        " - query (string): The question or search phrase. "
-        " - top_k (integer, optional, default=5): Number of top results to retrieve. "
-        "Output: JSON list of the most relevant text chunks with their source URLs."
-    )
-    args_schema: Type[BaseModel] = VectorQueryInput
-    web_ingest_tool: Any = None
-    def __init__(self, web_ingest_tool: WebIngestTool):
-        super().__init__()
-        self.web_ingest_tool = web_ingest_tool
-
-    def _run(self, query: str, top_k: int = 5) -> str:
-        try:
-            if self.web_ingest_tool.vectorstore is None:
-                return "Error: No vector database found. Please run WebIngestTool first to ingest documents."
-
-            docs = self.web_ingest_tool.vectorstore.similarity_search(query, k=top_k)
-            results = [
-                {"text": d.page_content, "source": d.metadata.get("source", "unknown")}
-                for d in docs
-            ]
-            import json
-            return json.dumps(results, ensure_ascii=False, indent=2)
-
-        except Exception as e:
-            return f"Error during vector query: {str(e)}"
-
-    async def _arun(self, query: str, top_k: int = 5) -> str:
-        raise NotImplementedError("Async not supported yet.")
-    
-    
-prompt = ChatPromptTemplate.from_messages(
+    prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
@@ -278,24 +104,28 @@ prompt = ChatPromptTemplate.from_messages(
         ("placeholder", "{agent_scratchpad}"),
     ]
 )
-
-llm = ChatGoogleGenerativeAI(
+    logging.info("ChatPromptTemplate initialized.")
+    llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash-lite",
-    temperature=0.4 # Use a lower temperature for more predictable tool usage
-)
+    temperature=0.4 
+    )
+    logging.info("LLM model configured.")
+    
+    try:
+        gsearch = GoogleSearchTool(serp_api_key)
+        webIngest = WebIngestTool()
+        vectorQuery = VectorQueryTool(webIngest)
+        tools = [gsearch, webIngest, vectorQuery]
+        logging.info("Tools successfully initialized.")
+    except Exception as e:
+        logging.error(f"Failed to initialize tools: {e}")
+        return f"Failed to initialize tools: {e}"
 
-gsearch = GoogleSearchTool(serp_api_key)
-webIngest = WebIngestTool()
-vectorQuery = VectorQueryTool(webIngest)
-
-tools = [gsearch, webIngest, vectorQuery]
-
-agent = create_tool_calling_agent(llm, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-response = agent_executor.invoke({
-    "input": "I want to sell my saas which is a hotel guest complaint management saas. I am targeting all types of hotels that would want to manage guest comlaints. Maybe have threeshold for number of rooms to guage if a hotel would want my product. location can be popular tourist cities in India. help me find leads"
-})
-
-# Print the final answer from the agent
-print("\nFinal Answer:")
-print(response["output"])
+    tools = [gsearch, webIngest, vectorQuery]
+    memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=2000, memory_key="chat_history")
+    logging.info("ConversationSummaryBufferMemory configured.")
+    agent = create_tool_calling_agent(llm, tools, prompt)
+    logging.info("Agent created using create_tool_calling_agent.")
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    logging.info("AgentExecutor initialized.")
+    return agent_executor
