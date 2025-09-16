@@ -1,0 +1,79 @@
+2025-09-16 16:03:29,911 - INFO - Application started. Initializing lead generation agent.
+2025-09-16 16:03:30,011 - INFO - GoogleSearchTool initialized.
+2025-09-16 16:03:30,018 - INFO - WebIngestTool initialized.
+2025-09-16 16:03:30,018 - INFO - VectorQueryTool initialized.
+2025-09-16 16:03:30,068 - INFO - Agent executor instance created successfully.
+2025-09-16 16:04:09,508 - INFO - Application started. Initializing lead generation agent.
+2025-09-16 16:04:09,509 - INFO - API keys set up successfully.
+2025-09-16 16:04:09,509 - INFO - Starting the Lead Generation Agent creation process.
+2025-09-16 16:04:09,510 - INFO - ChatPromptTemplate initialized.
+2025-09-16 16:04:09,575 - INFO - LLM model configured.
+2025-09-16 16:04:09,576 - INFO - GoogleSearchTool initialized.
+2025-09-16 16:04:09,584 - INFO - WebIngestTool initialized.
+2025-09-16 16:04:09,585 - INFO - VectorQueryTool initialized.
+2025-09-16 16:04:09,586 - INFO - Tools successfully initialized.
+2025-09-16 16:04:09,591 - INFO - ConversationSummaryBufferMemory configured.
+2025-09-16 16:04:09,628 - INFO - Agent created using create_tool_calling_agent.
+2025-09-16 16:04:09,633 - INFO - AgentExecutor initialized.
+2025-09-16 16:04:09,634 - INFO - Agent executor instance created successfully.
+2025-09-16 16:04:40,356 - INFO - Invoking the agent executor.
+2025-09-16 16:04:46,752 - INFO - Agent execution complete. Output received.
+2025-09-16 16:06:40,745 - INFO - Invoking the agent executor.
+2025-09-16 16:06:44,320 - INFO - Executing Google search with query: 'top luxury hotels in India' and max_results: 5
+2025-09-16 16:06:46,446 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:46,450 - INFO - Executing Google search with query: 'top boutique hotels in India' and max_results: 5
+2025-09-16 16:06:47,908 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:47,912 - INFO - Executing Google search with query: 'top tourist hotels in India' and max_results: 5
+2025-09-16 16:06:49,305 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:49,311 - INFO - Executing Google search with query: 'large hotels in Goa' and max_results: 5
+2025-09-16 16:06:52,511 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:52,515 - INFO - Executing Google search with query: 'large hotels in Kerala' and max_results: 5
+2025-09-16 16:06:54,010 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:54,015 - INFO - Executing Google search with query: 'large hotels in Rajasthan' and max_results: 5
+2025-09-16 16:06:57,150 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:57,156 - INFO - Executing Google search with query: 'large hotels in Delhi' and max_results: 5
+2025-09-16 16:06:58,652 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:06:58,656 - INFO - Executing Google search with query: 'large hotels in Mumbai' and max_results: 5
+2025-09-16 16:07:00,832 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:07:00,838 - INFO - Executing Google search with query: 'large hotels in Bangalore' and max_results: 5
+2025-09-16 16:07:02,116 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:07:02,119 - INFO - Executing Google search with query: 'large hotels in Chennai' and max_results: 5
+2025-09-16 16:07:03,390 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:07:03,395 - INFO - Executing Google search with query: 'large hotels in Hyderabad' and max_results: 5
+2025-09-16 16:07:05,193 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:07:05,202 - INFO - Executing Google search with query: 'large hotels in Kolkata' and max_results: 5
+2025-09-16 16:07:07,657 - INFO - Successfully retrieved 5 organic results.
+2025-09-16 16:07:15,644 - INFO - Starting web ingestion for 55 URLs: ['https://www.scottdunn.com/india/hotels', 'https://www.cntraveller.com/gallery/best-hotels-india', 'https://www.tripadvisor.in/Hotels-g293860-zff12-India-Hotels.html', 'https://www.privateupgrades.com/luxury-hotels/asia/india', 'https://www.lartisien.com/hotels/india', 'https://www.i-escape.com/india/boutique-hotels', 'https://www.tripadvisor.in/HotelsList-India-Boutique-Hotels-zfp7943880.html', 'https://www.architecturaldigest.in/tag/boutique-hotel/', 'https://www.mrandmrssmith.com/destinations/india/hotels', 'https://www.youtube.com/watch?v=fmlcg3hgxhY', 'https://www.makemytrip.com/hotels/luxury-hotels-in-goa.html', 'https://www.tripadvisor.in/Hotels-g297604-zff12-Goa-Hotels.html', 'https://www.tajhotels.com/en-in/destination/hotels-in-goa', 'https://www.agoda.com/en-in/city/goa-in.html', 'https://www.cntraveller.in/gallery/the-best-hotels-in-goa-north-goa-south-goa-anjuna-candolim-panjim/', 'https://www.tripadvisor.in/HotelsList-Kerala-Luxury-Resorts-zfp7139.html', 'https://www.booking.com/luxury/region/in/kerala.html', 'https://www.tajhotels.com/en-in/destination/hotels-in-kerala', 'https://luxuryescapes.com/in/hotels/location/kerala/india?srsltid=AfmBOopFzbpPuiWy_HeUFbaJpRQ30sbiRI_ReUVagy1oRB9KEWVKe86_', 'https://kondodyhotels.com/', 'https://www.tripadvisor.in/Hotels-g297665-zff12-Rajasthan-Hotels.html', 'https://www.lartisien.com/hotels/india/rajasthan', 'https://www.i-escape.com/rajasthan/boutique-hotels', 'https://www.aman.com/resorts/amanbagh', 'https://luxuryescapes.com/in/hotels/location/rajasthan/india?srsltid=AfmBOooAAGCeHQwc5nnSnHtEblZtOaCbJOxbqnqNKjHjkJIsk8em4yiB', 'https://www.tripadvisor.in/Hotels-g304551-zff12-New_Delhi_National_Capital_Territory_of_Delhi-Hotels.html', 'https://www.makemytrip.com/hotels/five_star-hotels-delhi.html', 'https://www.americanexpress.com/en-in/travel/discover/property-results/dt/4/d/New%20Delhi,India', 'https://www.thegrandnewdelhi.com/', 'https://theimperialindia.com/', 'https://www.tripadvisor.in/Hotels-g304554-zff12-Mumbai_Maharashtra-Hotels.html', 'https://www.makemytrip.com/hotels/five_star-hotels-mumbai.html', 'https://www.forbes.com/places/india/mumbai/', 'https://www.tajhotels.com/en-in/destination/hotels-in-mumbai', 'https://www.fairmont.com/en/hotels/mumbai/fairmont-mumbai.html', 'https://www.tripadvisor.in/Hotels-g297628-zff12-Bengaluru_Bangalore_District_Karnataka-Hotels.html', 'https://www.makemytrip.com/hotels/five_star-hotels-bangalore.html', 'https://www.tajhotels.com/en-in/destination/hotels-in-bangalore', 'https://www.agoda.com/en-in/city/bangalore-in.html', 'https://www.itchotels.com/in/en/destinations/hotels-in-bengaluru', 'https://www.makemytrip.com/hotels/five_star-hotels-chennai.html', 'https://www.tripadvisor.in/Hotels-g304556-zfc5-Chennai_Madras_Chennai_District_Tamil_Nadu-Hotels.html', 'https://theluxuryeditor.com/location/asia/india/tamil-nadu/chennai/', 'https://www.tajhotels.com/en-in/destination/hotels-in-chennai', 'https://luxuryescapes.com/in/hotels/location/chennai/tamil-nadu/india?srsltid=AfmBOooowgpE5-yhIYDQTuH372TIE2OP5QZpYkJpoSEJqYMc3K_Qglqe', 'https://www.tripadvisor.in/Hotels-g297586-zff12-Hyderabad_Hyderabad_District_Telangana-Hotels.html', 'https://www.makemytrip.com/hotels/luxury-hotels-in-hyderabad.html', 'https://www.tajhotels.com/en-in/destination/hotels-in-hyderabad', 'https://www.booking.com/luxury/city/in/hyderabad.html', 'https://luxuryescapes.com/in/hotels/location/hyderabad/telangana/india?srsltid=AfmBOopw4tQ2jCfrdfagCosuo0uQ74MkvaNA8C680taRpooN3WO9AR8d', 'https://www.makemytrip.com/hotels/five_star-hotels-kolkata.html', 'https://www.tripadvisor.in/Hotels-g304558-zff12-Kolkata_Calcutta_Kolkata_District_West_Bengal-Hotels.html', 'https://www.booking.com/luxury/city/in/calcutta.html', 'https://www.tajhotels.com/en-in/destination/hotels-in-kolkata', 'https://www.itchotels.com/in/en/itcroyalbengal-kolkata']
+2025-09-16 16:07:21,084 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g293860-zff12-India-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g293860-zff12-India-Hotels.html
+2025-09-16 16:07:27,727 - ERROR - Failed to scrape https://www.tripadvisor.in/HotelsList-India-Boutique-Hotels-zfp7943880.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/HotelsList-India-Boutique-Hotels-zfp7943880.html
+2025-09-16 16:07:45,812 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/luxury-hotels-in-goa.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:07:46,308 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g297604-zff12-Goa-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g297604-zff12-Goa-Hotels.html
+2025-09-16 16:07:49,195 - ERROR - Failed to scrape https://www.tripadvisor.in/HotelsList-Kerala-Luxury-Resorts-zfp7139.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/HotelsList-Kerala-Luxury-Resorts-zfp7139.html
+2025-09-16 16:07:57,590 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g297665-zff12-Rajasthan-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g297665-zff12-Rajasthan-Hotels.html
+2025-09-16 16:08:05,518 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g304551-zff12-New_Delhi_National_Capital_Territory_of_Delhi-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g304551-zff12-New_Delhi_National_Capital_Territory_of_Delhi-Hotels.html
+2025-09-16 16:08:15,713 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/five_star-hotels-delhi.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:08:22,706 - ERROR - Failed to scrape https://theimperialindia.com/ due to a request error: 502 Server Error: Bad Gateway for url: https://theimperialindia.com/
+2025-09-16 16:08:23,227 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g304554-zff12-Mumbai_Maharashtra-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g304554-zff12-Mumbai_Maharashtra-Hotels.html
+2025-09-16 16:08:33,415 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/five_star-hotels-mumbai.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:08:34,245 - ERROR - Failed to scrape https://www.forbes.com/places/india/mumbai/ due to a request error: 404 Client Error: Not Found for url: https://www.forbes.com/places/india/mumbai/
+2025-09-16 16:08:36,803 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g297628-zff12-Bengaluru_Bangalore_District_Karnataka-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g297628-zff12-Bengaluru_Bangalore_District_Karnataka-Hotels.html
+2025-09-16 16:08:47,035 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/five_star-hotels-bangalore.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:09:01,412 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/five_star-hotels-chennai.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:09:01,907 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g304556-zfc5-Chennai_Madras_Chennai_District_Tamil_Nadu-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g304556-zfc5-Chennai_Madras_Chennai_District_Tamil_Nadu-Hotels.html
+2025-09-16 16:09:13,285 - ERROR - Failed to scrape https://theluxuryeditor.com/location/asia/india/tamil-nadu/chennai/ due to a request error: HTTPSConnectionPool(host='theluxuryeditor.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:09:15,234 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g297586-zff12-Hyderabad_Hyderabad_District_Telangana-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g297586-zff12-Hyderabad_Hyderabad_District_Telangana-Hotels.html
+2025-09-16 16:09:25,397 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/luxury-hotels-in-hyderabad.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:09:39,335 - ERROR - Failed to scrape https://www.makemytrip.com/hotels/five_star-hotels-kolkata.html due to a request error: HTTPSConnectionPool(host='www.makemytrip.com', port=443): Read timed out. (read timeout=10)
+2025-09-16 16:09:39,879 - ERROR - Failed to scrape https://www.tripadvisor.in/Hotels-g304558-zff12-Kolkata_Calcutta_Kolkata_District_West_Bengal-Hotels.html due to a request error: 403 Client Error: Forbidden for url: https://www.tripadvisor.in/Hotels-g304558-zff12-Kolkata_Calcutta_Kolkata_District_West_Bengal-Hotels.html
+2025-09-16 16:09:46,341 - INFO - Created 430 chunks from the scraped content.
+2025-09-16 16:09:52,499 - INFO - Agent execution complete. Output received.
+2025-09-16 16:15:24,490 - INFO - Invoking the agent executor.
+2025-09-16 16:15:28,799 - INFO - Agent execution complete. Output received.
+2025-09-16 16:15:54,861 - INFO - Invoking the agent executor.
+2025-09-16 16:16:11,592 - INFO - Agent execution complete. Output received.
+2025-09-16 16:16:42,686 - INFO - Invoking the agent executor.
+2025-09-16 16:17:04,956 - INFO - Agent execution complete. Output received.
+2025-09-16 16:21:10,716 - INFO - Invoking the agent executor.
+2025-09-16 16:21:14,289 - INFO - Agent execution complete. Output received.
+2025-09-16 16:21:49,556 - INFO - Invoking the agent executor.
+2025-09-16 16:22:26,538 - INFO - Agent execution complete. Output received.
