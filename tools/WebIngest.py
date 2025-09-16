@@ -7,7 +7,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-
+import logging 
+logger = logging.getLogger(__name__)
 
 class WebIngestInput(BaseModel):
     urls: List[str] = Field(..., description="List of URLs to scrape and index")
@@ -28,27 +29,32 @@ class WebIngestTool(BaseTool):
         super().__init__()
         self.embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         self.vectorstore = None  # will be initialized after ingestion
+        logger.info("WebIngestTool initialized.")
 
     def _run(self, urls: List[str]) -> str:
+        logger.info(f"Starting web ingestion for {len(urls)} URLs: {urls}")
         try:
             all_texts = []
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             }
             for url in urls:
-                response = requests.get(url, headers=headers, timeout=10)
-                response.raise_for_status()
-
-                soup = BeautifulSoup(response.text, "html.parser")
-
-                # Remove scripts, styles
-                for script in soup(["script", "style"]):
-                    script.extract()
-
-                text = soup.get_text(separator=" ", strip=True)
-                all_texts.append({"source": url, "content": text})
-
-            # Split text into chunks
+                try:
+                    response = requests.get(url, headers=headers, timeout=10)
+                    response.raise_for_status()
+                    soup = BeautifulSoup(response.text, "html.parser")
+                    for script in soup(["script", "style"]):
+                        script.extract()
+                    text = soup.get_text(separator=" ", strip=True)
+                    all_texts.append({"source": url, "content": text})
+                except requests.exceptions.RequestException as req_err:
+                    logger.error(f"Failed to scrape {url} due to a request error: {req_err}")
+                except Exception as e:
+                    logger.error(f"An unexpected error occurred while processing {url}: {e}")
+                    
+            if not all_texts:
+                logger.warning("No content was successfully scraped from the provided URLs.")
+                return "No content was scraped. Please check the URLs."
             splitter = RecursiveCharacterTextSplitter(
                 chunk_size=1000,
                 chunk_overlap=100,
@@ -60,14 +66,21 @@ class WebIngestTool(BaseTool):
                 chunks = splitter.split_text(item["content"])
                 for chunk in chunks:
                     documents.append({"page_content": chunk, "metadata": {"source": item["source"]}})
+            logger.info(f"Created {len(documents)} chunks from the scraped content.")
 
-            # Embed and store into FAISS
-            self.vectorstore = FAISS.from_texts(
-                texts=[d["page_content"] for d in documents],
-                embedding=self.embedding_model,
-                metadatas=[d["metadata"] for d in documents],
-            )
-
+            if self.vectorstore is not None:
+                self.vectorstore.add_text(
+                    texts=[d["page_content"] for d in documents],
+                    metadatas=[d["metadata"] for d in documents]
+                )
+            else:
+                self.vectorstore = FAISS.from_texts(
+                    texts=[d["page_content"] for d in documents],
+                    embedding=self.embedding_model,
+                    metadatas=[d["metadata"] for d in documents],
+                )
+                
+            logger.info(f"Successfully ingested and stored {len(documents)} chunks.")
             return f"Successfully ingested {len(documents)} chunks from {len(urls)} URLs into vector store."
 
         except Exception as e:
