@@ -1,8 +1,8 @@
-# Agentic Sales Pipeline 🚀
+# Agentic Sales Pipeline 
 
 An intelligent outbound sales automation system built with **LangGraph** and **LangChain**. This multi-agent platform automates lead research, qualification, personalized outreach, and follow-up workflows using AI agents.
 
-## 🎯 Project Status
+##  Project Status
 
 **Currently Implemented:**
 - ✅ Lead Research Agent - Fully functional
@@ -11,7 +11,7 @@ An intelligent outbound sales automation system built with **LangGraph** and **L
 - ⏳ Follow-up Agent - In development
 - ⏳ LangGraph Pipeline Integration - Planned
 
-## 🔧 Features
+##  Features
 
 ### Lead Research Agent (Active)
 - **Intelligent Lead Discovery**: Uses Google Search to find companies matching your Ideal Customer Profile (ICP)
@@ -20,13 +20,13 @@ An intelligent outbound sales automation system built with **LangGraph** and **L
 - **Smart Information Extraction**: Uses AI to extract structured company data
 - **Multi-step Research**: Performs iterative research to enrich lead profiles
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - Python 3.8+
 - Google API Key (for Gemini)
 - SerpAPI Key (for Google Search)
 
-## 🚀 Installation
+##  Installation
 
 1. **Clone the repository**
 ```bash
@@ -54,7 +54,7 @@ SERPAPI_KEY=your_serpapi_key_here
 
 Or set them directly in the code (as shown in current implementation).
 
-## 🎮 Usage
+##  Usage
 
 ### Running the Lead Research Agent
 
@@ -100,7 +100,7 @@ The agent will return a structured JSON response:
 }
 ```
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 agentic-sales-pipeline/
@@ -123,7 +123,7 @@ agentic-sales-pipeline/
 └── README.md                 # Project documentation
 ```
 
-## 🔧 How It Works
+##  How It Works
 
 ### Lead Research Agent Workflow
 
